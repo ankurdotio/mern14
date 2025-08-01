@@ -8,12 +8,16 @@ var imagekit = new ImageKit({
 
 
 async function uploadFile(file, fileName) {
+
     const result = await imagekit.upload({
-        file: file,
-        fileName: fileName, // required
+        file,
+        fileName,
+        folder: 'mern14-audio'
     })
-    
-    return result
+
+    return result;
 }
+
+
 
 module.exports = uploadFile
