@@ -15,6 +15,7 @@
     "express": "^5.1.0",
     "imagekit": "^6.0.0",
     "mongoose": "^8.16.5",
-    "multer": "^2.0.2"
+    "multer": "^2.0.2",
+    "node-id3": "^0.2.9"
   }
 }

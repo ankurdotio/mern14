@@ -1,42 +1,35 @@
 const express = require('express');
-const songModel = require("../models/song.model")
-const router = express.Router();
 const multer = require('multer');
+const id3 = require("node-id3")
 const uploadFile = require("../services/storage.service")
-const id3 = require('node-id3');
-
-const upload = multer({ storage: multer.memoryStorage() })
+const songModel = require("../models/song.model");
 
 
-router.post('/songs', upload.single('audio'), async (req, res) => {
-    try {
-        const buffer = req.file.buffer;
-        const base64File = Buffer.from(buffer).toString("base64")
+const upload = multer({ storage: multer.memoryStorage() });
 
-        const response = id3.read(buffer)
-        const result = await uploadFile(base64File, 'hello')
-        const coverImageResult = await uploadFile(Buffer.from(response.image.imageBuffer).toString("base64"), 'coverImage')
+const router = express.Router();
 
-        const song = await songModel.create({
-            title: response.title,
-            artist: response.artist,
-            album: response.album,
-            releaseDate: response.year,
-            audioUrl: result.url,
-            coverImage: coverImageResult.url
-        })
+router.post('/songs', upload.single("audio"), async (req, res) => {
+    const file = req.file;
 
-        res.status(201).json({
-            message: "Song uploaded successfully",
-            song
-        })
+    const tags = id3.read(file.buffer)
 
-    }
-    catch (err) {
-        console.log(err);
-        return res.status(500).json({ message: "Error uploading file" });
-    }
+    const audio = await uploadFile(file.buffer, "audio")
+    const coverImage = await uploadFile(tags.image.imageBuffer, "coverImage")
 
+    const song = await songModel.create({
+        title: tags.title,
+        artist: tags.artist,
+        album: tags.album,
+        releaseDate: tags.year,
+        audioUrl: audio.url,
+        coverImage: coverImage.url
+    })
+
+    res.status(201).json({
+        message: "Song created successfully",
+        song
+    });
 })
 
 
