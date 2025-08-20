@@ -7,6 +7,15 @@ const app = express();
 
 app.use(express.json());
 
+app.use((req, res, next) => {
+    console.log(req.body)
+    console.log("this is a middleware")
+
+    req.body = {}
+
+    next()
+
+})
 
 app.use("/api/auth", authRoutes)
 app.use("/api/user", userRoutes)

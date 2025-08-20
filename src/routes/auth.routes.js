@@ -3,6 +3,11 @@ const userModel = require('../models/user.model');
 const jwt = require('jsonwebtoken');
 const router = express.Router();
 
+
+
+
+
+
 router.post("/register", async (req, res) => {
 
     const { email, password } = req.body;
@@ -26,7 +31,7 @@ router.post("/register", async (req, res) => {
 
 })
 
-router.post('/login', async (req, res) => {
+router.post('/login', (req, res, next) => { }, async (req, res) => {
     const { email, password } = req.body
     const user = await userModel.findOne({ email })
 
