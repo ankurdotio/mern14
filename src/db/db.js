@@ -1,16 +1,16 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose")
 
 
 function connectDB() {
 
-    mongoose.connect("mongodb://localhost:27017/mern14-auth")
+    mongoose.connect(process.env.MONGO_URL)
         .then(() => {
-            console.log("MongoDB connected successfully");
+            console.log("MongoDB connected successfully")
         })
-        .catch((err) => {
-            console.error("MongoDB connection failed", err);
-        });
+        .catch(err => {
+            console.log(err)
+        })
 
 }
 
-module.exports = connectDB;
+module.exports = connectDB

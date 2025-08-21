@@ -1,40 +1,36 @@
-const express = require('express');
+const express = require("express");
+const userController = require("../controllers/user.controller")
+const jwt = require("jsonwebtoken");
+
+
 const router = express.Router();
-const jwt = require('jsonwebtoken');
-const userModel = require('../models/user.model');
 
-/* GET /api/user/profile [protected] */
-router.get('/profile', async (req, res) => {
 
-    const { token } = req.body || {}
+router.get('/profile',
 
-    if (!token) {
-        return res.status(401).json({
-            message: "Unauthorized, no token provided"
-        })
+    (req, res, next) => {
+
+        const token = req.cookies.token
+
+        if (!token) {
+            return res.status(401).json({
+                message: "Unauthorized, no token provided"
+            })
+        }
+
+        try {
+            const decoded = jwt.verify(token, process.env.JWT_SECRET)
+            req.user = decoded
+            next()
+        } catch (err) {
+            return res.status(401).json({
+                message: "Unauthorized, invalid token"
+            })
+        }
+
     }
 
-    try {
-        const decoded = jwt.verify(token, "3d02e3016491447b9aa9d0966726c331")
-
-        console.log(decoded)
-
-        const user = await userModel.findOne({
-            _id: decoded.id
-        })
-
-        res.status(200).json({
-            message: "User profile fetched successfully",
-            user
-        })
-
-    } catch (err) {
-        return res.status(401).json({
-            message: "Invalid token"
-        })
-    }
-
-})
+    , userController.profile)
 
 
-module.exports = router;
+module.exports = router
