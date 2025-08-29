@@ -1,0 +1,34 @@
+user = {
+    email: String,
+    username: String,
+    fullName: {
+        firstName: String,
+        lastName: String
+    },
+    password: String,
+    role: "user" | "seller"
+}
+
+
+product = {
+    title: String,
+    description: String,
+    images: [ String ],
+    price: {
+        amount: Number, 
+        currency: String
+    },
+    seller:SellerId
+}
+
+
+payment = {
+
+    user: UserId,
+    product: ProductId,
+    price: {
+        amount: Number,
+        currency: String
+    }
+    
+}
